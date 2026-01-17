@@ -18,6 +18,7 @@ class Appointment extends Model
         'status',
         'priority',
         'created_by',
+        'completed_by',
         'medical_notes',
         'lab_reports',
         'checked_in_at',
@@ -45,6 +46,14 @@ class Appointment extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get the doctor who completed this appointment
+     */
+    public function completedBy()
+    {
+        return $this->belongsTo(User::class, 'completed_by');
     }
 
     /**

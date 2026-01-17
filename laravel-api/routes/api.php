@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\UserController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -15,6 +16,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    
+    // User signature routes
+    Route::post('/signature', [UserController::class, 'uploadSignature']);
+    Route::get('/signature', [UserController::class, 'getSignature']);
+    Route::delete('/signature', [UserController::class, 'deleteSignature']);
     
     // Admin only routes
     Route::middleware('role:admin')->prefix('admin')->group(function () {
@@ -68,6 +74,15 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/pending/today', [PrescriptionController::class, 'pending']);
             Route::post('/{id}/dispense', [PrescriptionController::class, 'dispense']);
             Route::post('/{id}/complete', [PrescriptionController::class, 'complete']);
+        });
+    });
+
+    // Lab Report routes
+    Route::prefix('lab-reports')->group(function () {
+        // Patient routes (student/staff)
+        Route::middleware('role:student,staff')->group(function () {
+            Route::get('/my-reports', [App\Http\Controllers\LabReportController::class, 'patientReports']);
+            Route::get('/download/{appointmentId}', [App\Http\Controllers\LabReportController::class, 'downloadReport']);
         });
     });
 });

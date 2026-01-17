@@ -9,6 +9,7 @@ function StudentStaffDashboard() {
   const [user, setUser] = useState(null);
   const [currentAppointment, setCurrentAppointment] = useState(null);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [labReports, setLabReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +20,92 @@ function StudentStaffDashboard() {
     }
     setUser(currentUser);
     fetchAppointments(currentUser.id);
+    fetchLabReports();
   }, [navigate]);
+
+  const fetchLabReports = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8000/api/lab-reports/my-reports', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setLabReports(data);
+    } catch (err) {
+      console.error('Failed to fetch lab reports:', err);
+    }
+  };
+
+  const downloadLabReport = async (appointmentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      console.log('Downloading report for appointment:', appointmentId);
+      
+      // Create a form and submit it to download the file
+      const url = `http://localhost:8000/api/lab-reports/download/${appointmentId}`;
+      
+      // Use fetch with proper blob handling
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/pdf'
+        }
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', [...response.headers.entries()]);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Download failed: ${response.status}`);
+      }
+      
+      // Check content type
+      const contentType = response.headers.get('content-type');
+      console.log('Content-Type:', contentType);
+      
+      if (!contentType || !contentType.includes('application/pdf')) {
+        console.error('Invalid content type:', contentType);
+        const text = await response.text();
+        console.error('Response body:', text);
+        throw new Error('Server did not return a PDF file');
+      }
+      
+      // Convert response to blob
+      const blob = await response.blob();
+      console.log('Blob size:', blob.size, 'type:', blob.type);
+      
+      if (blob.size === 0) {
+        throw new Error('Received empty PDF file');
+      }
+      
+      // Create download link
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `Lab_Report_${appointmentId}.pdf`;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+      }, 100);
+      
+      console.log('Download initiated successfully');
+      
+    } catch (err) {
+      console.error('Failed to download lab report:', err);
+      alert('Failed to download lab report: ' + err.message);
+    }
+  };
 
   const fetchAppointments = async (userId) => {
     setLoading(true);
@@ -197,6 +283,38 @@ function StudentStaffDashboard() {
                 <p>Visit Nurse's Office</p>
               </div>
             </div>
+
+            {/* Lab Reports Section */}
+            {labReports.length > 0 && (
+              <div className="lab-reports-section">
+                <h2>📋 My Lab Reports</h2>
+                <div className="lab-reports-grid">
+                  {labReports.map((appointment) => (
+                    <div key={appointment.id} className="lab-report-card">
+                      <div className="report-header">
+                        <div className="report-id">Appointment #{appointment.appointment_number}</div>
+                        <div className="report-date">
+                          {new Date(appointment.completed_at).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div className="report-content">
+                        <p className="report-label">Lab Tests Required:</p>
+                        <p className="report-text">{appointment.lab_reports}</p>
+                      </div>
+                      <div className="report-footer">
+                        <span className="approved-badge">✓ Doctor Approved</span>
+                        <button 
+                          onClick={() => downloadLabReport(appointment.id)}
+                          className="btn-download"
+                        >
+                          📥 Download PDF
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

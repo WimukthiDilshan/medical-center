@@ -26,6 +26,7 @@ class User extends Authenticatable
         'staff_id',
         'is_approved',
         'phone',
+        'signature',
     ];
 
     /**

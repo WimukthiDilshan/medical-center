@@ -171,10 +171,8 @@ class AppointmentController extends Controller
     public function complete(Request $request, $id)
     {
         $request->validate([
-            'medical_notes' => 'required|string',
-            'diagnosis' => 'nullable|string',
+            'medical_notes' => 'nullable|string',
             'medications' => 'nullable|string',
-            'instructions' => 'nullable|string',
             'lab_reports' => 'nullable|string',
         ]);
 
@@ -185,6 +183,7 @@ class AppointmentController extends Controller
             'medical_notes' => $request->medical_notes,
             'lab_reports' => $request->lab_reports,
             'completed_at' => now(),
+            'completed_by' => $request->user()->id,
         ]);
 
         // Create prescription if medications provided
@@ -193,9 +192,7 @@ class AppointmentController extends Controller
                 'appointment_id' => $appointment->id,
                 'patient_id' => $appointment->user_id,
                 'doctor_id' => $request->user()->id,
-                'diagnosis' => $request->diagnosis ?? $request->medical_notes,
                 'medications' => $request->medications,
-                'instructions' => $request->instructions,
                 'status' => 'pending',
             ]);
         }

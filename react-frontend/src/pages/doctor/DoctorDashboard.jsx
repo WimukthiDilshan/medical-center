@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import appointmentService from '../../services/appointmentService';
 import prescriptionService from '../../services/prescriptionService';
+import SignatureManager from '../../components/SignatureManager';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [medicalNotes, setMedicalNotes] = useState('');
-  const [diagnosis, setDiagnosis] = useState('');
   const [medications, setMedications] = useState('');
-  const [instructions, setInstructions] = useState('');
   const [labReports, setLabReports] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -70,10 +69,6 @@ function DoctorDashboard() {
   // Complete appointment
   const handleCompleteAppointment = async (e) => {
     e.preventDefault();
-    if (!medicalNotes.trim()) {
-      setError('Please enter medical notes');
-      return;
-    }
 
     setLoading(true);
     setError('');
@@ -82,9 +77,7 @@ function DoctorDashboard() {
     try {
       const data = {
         medical_notes: medicalNotes,
-        diagnosis: diagnosis,
         medications: medications,
-        instructions: instructions,
         lab_reports: labReports
       };
       
@@ -93,9 +86,7 @@ function DoctorDashboard() {
       
       // Reset form
       setMedicalNotes('');
-      setDiagnosis('');
       setMedications('');
-      setInstructions('');
       setLabReports('');
       setSelectedAppointment(null);
       
@@ -191,11 +182,7 @@ function DoctorDashboard() {
                   </div>
                   <div className="prescription-details">
                     <p><strong>Patient:</strong> {prescription.patient?.name} (ID: {prescription.patient?.staff_id})</p>
-                    <p><strong>Diagnosis:</strong> {prescription.diagnosis}</p>
                     <p><strong>Medications:</strong> {prescription.medications}</p>
-                    {prescription.instructions && (
-                      <p><strong>Instructions:</strong> {prescription.instructions}</p>
-                    )}
                     <p><strong>Date:</strong> {new Date(prescription.created_at).toLocaleString()}</p>
                   </div>
                 </div>
@@ -368,28 +355,17 @@ function DoctorDashboard() {
                   <h3>Complete Consultation</h3>
                   
                   <div className="form-group">
-                    <label>Diagnosis:</label>
-                    <textarea
-                      value={diagnosis}
-                      onChange={(e) => setDiagnosis(e.target.value)}
-                      placeholder="Enter patient diagnosis..."
-                      rows="3"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Medical Notes:</label>
+                    <label>Notes:</label>
                     <textarea
                       value={medicalNotes}
                       onChange={(e) => setMedicalNotes(e.target.value)}
                       placeholder="Enter medical notes and observations..."
                       rows="4"
-                      required
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Medications / Prescription:</label>
+                    <label>Prescription:</label>
                     <textarea
                       value={medications}
                       onChange={(e) => setMedications(e.target.value)}
@@ -401,18 +377,8 @@ function DoctorDashboard() {
                     </small>
                   </div>
 
-                  <div className="form-group">
-                    <label>Instructions:</label>
-                    <textarea
-                      value={instructions}
-                      onChange={(e) => setInstructions(e.target.value)}
-                      placeholder="Additional instructions for patient..."
-                      rows="3"
-                    />
-                  </div>
-
                   <div className="form-group lab-reports-group">
-                    <label>🩺 Lab Reports / Blood Tests Required:</label>
+                    <label>🩺 Lab Request:</label>
                     <textarea
                       value={labReports}
                       onChange={(e) => setLabReports(e.target.value)}
@@ -446,6 +412,11 @@ function DoctorDashboard() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* E-Signature Management Section */}
+      <div style={{ margin: '30px auto', maxWidth: '1200px', padding: '0 20px' }}>
+        <SignatureManager />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import SignatureManager from '../components/SignatureManager';
 import './Dashboard.css';
 
 function DoctorDashboard() {
@@ -71,6 +72,10 @@ function DoctorDashboard() {
             <li>Medical Reports</li>
             <li>Laboratory Results</li>
           </ul>
+        </div>
+
+        <div className="info-section" style={{ marginTop: '30px' }}>
+          <SignatureManager />
         </div>
       </div>
     </div>
