@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PrescriptionController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -47,6 +48,26 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/{id}/start', [AppointmentController::class, 'startConsultation']);
             Route::post('/{id}/complete', [AppointmentController::class, 'complete']);
             Route::get('/report/daily', [AppointmentController::class, 'report']);
+        });
+    });
+
+    // Prescription routes
+    Route::prefix('prescriptions')->group(function () {
+        // Common routes (nurse, pharmacist, doctor)
+        Route::get('/', [PrescriptionController::class, 'index']);
+        Route::get('/{id}', [PrescriptionController::class, 'show']);
+        Route::get('/patient/{patientId}', [PrescriptionController::class, 'patientPrescriptions']);
+        
+        // Doctor routes
+        Route::middleware('role:doctor')->group(function () {
+            Route::post('/', [PrescriptionController::class, 'store']);
+        });
+
+        // Pharmacist routes
+        Route::middleware('role:pharmacist')->group(function () {
+            Route::get('/pending/today', [PrescriptionController::class, 'pending']);
+            Route::post('/{id}/dispense', [PrescriptionController::class, 'dispense']);
+            Route::post('/{id}/complete', [PrescriptionController::class, 'complete']);
         });
     });
 });

@@ -96,10 +96,10 @@ const appointmentService = {
   },
 
   // Doctor: Complete appointment
-  completeAppointment: async (id, medicalNotes) => {
+  completeAppointment: async (id, data) => {
     const token = localStorage.getItem('token');
     const response = await axios.post(`${API_URL}/appointments/${id}/complete`, 
-      { medical_notes: medicalNotes },
+      data,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;

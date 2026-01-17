@@ -1,17 +1,25 @@
 import { useState, useEffect } from 'react';
 import appointmentService from '../../services/appointmentService';
+import prescriptionService from '../../services/prescriptionService';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [medicalNotes, setMedicalNotes] = useState('');
+  const [diagnosis, setDiagnosis] = useState('');
+  const [medications, setMedications] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [labReports, setLabReports] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const [patientHistory, setPatientHistory] = useState([]);
   const [completedCount, setCompletedCount] = useState(0);
+  const [showPrescriptions, setShowPrescriptions] = useState(false);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [showReports, setShowReports] = useState(false);
 
   // Fetch today's queue
   const fetchQueue = async () => {
@@ -25,6 +33,17 @@ function DoctorDashboard() {
       setCompletedCount(completed);
     } catch (err) {
       setError('Failed to fetch appointments');
+    }
+  };
+
+  // Fetch doctor's prescriptions
+  const fetchPrescriptions = async () => {
+    try {
+      const data = await prescriptionService.getPrescriptions();
+      setPrescriptions(data);
+      setShowPrescriptions(true);
+    } catch (err) {
+      setError('Failed to fetch prescriptions');
     }
   };
 
@@ -61,10 +80,25 @@ function DoctorDashboard() {
     setSuccess('');
 
     try {
-      await appointmentService.completeAppointment(selectedAppointment.id, medicalNotes);
+      const data = {
+        medical_notes: medicalNotes,
+        diagnosis: diagnosis,
+        medications: medications,
+        instructions: instructions,
+        lab_reports: labReports
+      };
+      
+      await appointmentService.completeAppointment(selectedAppointment.id, data);
       setSuccess('Appointment completed successfully');
+      
+      // Reset form
       setMedicalNotes('');
+      setDiagnosis('');
+      setMedications('');
+      setInstructions('');
+      setLabReports('');
       setSelectedAppointment(null);
+      
       fetchQueue();
     } catch (err) {
       setError('Failed to complete appointment');
@@ -127,6 +161,75 @@ function DoctorDashboard() {
           <p className="stat-number">{completedCount}</p>
         </div>
       </div>
+
+      {/* Action Buttons */}
+      <div className="action-buttons">
+        <button onClick={fetchPrescriptions} className="btn-action">
+          📋 View My Prescriptions
+        </button>
+        <button onClick={() => setShowReports(!showReports)} className="btn-action">
+          📊 Get Reports
+        </button>
+      </div>
+
+      {/* Prescriptions Section */}
+      {showPrescriptions && (
+        <div className="card prescriptions-card">
+          <div className="card-header-flex">
+            <h2>My Prescriptions</h2>
+            <button onClick={() => setShowPrescriptions(false)} className="btn-close-section">✕</button>
+          </div>
+          <div className="prescriptions-list">
+            {prescriptions.length === 0 ? (
+              <p>No prescriptions found</p>
+            ) : (
+              prescriptions.map((prescription) => (
+                <div key={prescription.id} className="prescription-item">
+                  <div className="prescription-header">
+                    <span className="prescription-id">Prescription #{prescription.id}</span>
+                    <span className={`badge badge-${prescription.status}`}>{prescription.status}</span>
+                  </div>
+                  <div className="prescription-details">
+                    <p><strong>Patient:</strong> {prescription.patient?.name} (ID: {prescription.patient?.staff_id})</p>
+                    <p><strong>Diagnosis:</strong> {prescription.diagnosis}</p>
+                    <p><strong>Medications:</strong> {prescription.medications}</p>
+                    {prescription.instructions && (
+                      <p><strong>Instructions:</strong> {prescription.instructions}</p>
+                    )}
+                    <p><strong>Date:</strong> {new Date(prescription.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Reports Section */}
+      {showReports && (
+        <div className="card reports-card">
+          <div className="card-header-flex">
+            <h2>Reports & Statistics</h2>
+            <button onClick={() => setShowReports(false)} className="btn-close-section">✕</button>
+          </div>
+          <div className="reports-content">
+            <div className="report-item">
+              <h3>Today's Summary</h3>
+              <p>Total Appointments: {appointments.length}</p>
+              <p>Completed: {completedCount}</p>
+              <p>Pending: {stats.pending}</p>
+              <p>In Progress: {stats.in_progress}</p>
+            </div>
+            <div className="report-item">
+              <h3>Prescriptions</h3>
+              <p>Total Prescribed: {prescriptions.length}</p>
+              <p>Pending: {prescriptions.filter(p => p.status === 'pending').length}</p>
+              <p>Dispensed: {prescriptions.filter(p => p.status === 'dispensed').length}</p>
+              <p>Completed: {prescriptions.filter(p => p.status === 'completed').length}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="dashboard-grid">
         {/* Queue List */}
@@ -263,16 +366,64 @@ function DoctorDashboard() {
               {selectedAppointment.status === 'in_progress' && (
                 <form onSubmit={handleCompleteAppointment} className="consultation-form">
                   <h3>Complete Consultation</h3>
+                  
                   <div className="form-group">
-                    <label>Medical Notes / Prescription:</label>
+                    <label>Diagnosis:</label>
+                    <textarea
+                      value={diagnosis}
+                      onChange={(e) => setDiagnosis(e.target.value)}
+                      placeholder="Enter patient diagnosis..."
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Medical Notes:</label>
                     <textarea
                       value={medicalNotes}
                       onChange={(e) => setMedicalNotes(e.target.value)}
-                      placeholder="Enter diagnosis, prescription, and recommendations..."
-                      rows="8"
+                      placeholder="Enter medical notes and observations..."
+                      rows="4"
                       required
                     />
                   </div>
+
+                  <div className="form-group">
+                    <label>Medications / Prescription:</label>
+                    <textarea
+                      value={medications}
+                      onChange={(e) => setMedications(e.target.value)}
+                      placeholder="Enter prescribed medications, dosage, and duration... (e.g., Paracetamol 500mg - 2 times daily for 3 days)"
+                      rows="4"
+                    />
+                    <small style={{color: '#7f8c8d', marginTop: '5px', display: 'block'}}>
+                      If medications prescribed, it will be sent to pharmacist
+                    </small>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Instructions:</label>
+                    <textarea
+                      value={instructions}
+                      onChange={(e) => setInstructions(e.target.value)}
+                      placeholder="Additional instructions for patient..."
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="form-group lab-reports-group">
+                    <label>🩺 Lab Reports / Blood Tests Required:</label>
+                    <textarea
+                      value={labReports}
+                      onChange={(e) => setLabReports(e.target.value)}
+                      placeholder="Enter required lab tests/blood reports... (e.g., Complete Blood Count (CBC), Blood Sugar Test, Lipid Profile)"
+                      rows="3"
+                    />
+                    <small style={{color: '#7f8c8d', marginTop: '5px', display: 'block'}}>
+                      List any blood tests or lab reports required from laboratory
+                    </small>
+                  </div>
+
                   <button type="submit" disabled={loading} className="btn-complete">
                     {loading ? 'Completing...' : 'Complete Appointment'}
                   </button>

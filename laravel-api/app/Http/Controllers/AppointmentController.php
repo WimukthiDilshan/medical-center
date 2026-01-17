@@ -172,6 +172,10 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'medical_notes' => 'required|string',
+            'diagnosis' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'instructions' => 'nullable|string',
+            'lab_reports' => 'nullable|string',
         ]);
 
         $appointment = Appointment::findOrFail($id);
@@ -179,8 +183,22 @@ class AppointmentController extends Controller
         $appointment->update([
             'status' => 'completed',
             'medical_notes' => $request->medical_notes,
+            'lab_reports' => $request->lab_reports,
             'completed_at' => now(),
         ]);
+
+        // Create prescription if medications provided
+        if ($request->has('medications') && !empty($request->medications)) {
+            \App\Models\Prescription::create([
+                'appointment_id' => $appointment->id,
+                'patient_id' => $appointment->user_id,
+                'doctor_id' => $request->user()->id,
+                'diagnosis' => $request->diagnosis ?? $request->medical_notes,
+                'medications' => $request->medications,
+                'instructions' => $request->instructions,
+                'status' => 'pending',
+            ]);
+        }
 
         $appointment->load(['user', 'createdBy']);
 

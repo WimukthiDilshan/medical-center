@@ -19,6 +19,7 @@ class Appointment extends Model
         'priority',
         'created_by',
         'medical_notes',
+        'lab_reports',
         'checked_in_at',
         'completed_at',
     ];
