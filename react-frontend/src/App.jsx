@@ -3,10 +3,11 @@ import Login from './pages/Login';
 import RegisterStaff from './pages/RegisterStaff';
 import RegisterMedical from './pages/RegisterMedical';
 import AdminDashboard from './pages/AdminDashboard';
-import DoctorDashboard from './pages/DoctorDashboard';
-import NurseDashboard from './pages/NurseDashboard';
+import DoctorDashboard from './pages/doctor/DoctorDashboard';
+import NurseDashboard from './pages/nurse/NurseDashboard';
 import PharmacistDashboard from './pages/PharmacistDashboard';
 import StudentStaffDashboard from './pages/StudentStaffDashboard';
+import PatientAppointments from './pages/patient/PatientAppointments';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -69,6 +70,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['staff']}>
               <StudentStaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/appointments"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'staff']}>
+              <PatientAppointments />
             </ProtectedRoute>
           }
         />
