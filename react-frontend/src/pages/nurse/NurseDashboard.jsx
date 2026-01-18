@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import appointmentService from '../../services/appointmentService';
+import { authService } from '../../services/authService';
 import './NurseDashboard.css';
 
 function NurseDashboard() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [idNumber, setIdNumber] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [appointments, setAppointments] = useState([]);
@@ -156,10 +160,20 @@ function NurseDashboard() {
     }
   };
 
-  // Load appointments on mount
+  // Load user and appointments on mount
   useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+    }
     fetchAppointments();
   }, []);
+
+  // Handle logout
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate('/login');
+  };
 
   // Calculate stats
   const stats = {
@@ -172,10 +186,18 @@ function NurseDashboard() {
 
   return (
     <div className="nurse-dashboard">
-      <h1>Nurse Dashboard - Appointment Management</h1>
+      {/* Navigation Bar */}
+      <nav className="dashboard-nav">
+        <h1>Nurse Dashboard - Appointment Management</h1>
+        <div className="nav-user">
+          <span className="user-name">👤 {user?.name}</span>
+          <button onClick={handleLogout} className="btn-logout">Logout</button>
+        </div>
+      </nav>
 
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      <div className="dashboard-content">
+        {error && <div className="alert alert-error">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
 
       {/* Stats Cards */}
       <div className="stats-grid">
@@ -377,6 +399,7 @@ function NurseDashboard() {
             </tbody>
           </table>
         )}
+      </div>
       </div>
     </div>
   );

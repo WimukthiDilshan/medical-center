@@ -43,7 +43,18 @@ function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Medical Center Login</h2>
+        <div className="auth-header">
+          <img src="http://localhost:8000/images/logo.jpg" alt="University Logo" className="auth-logo" />
+          <div className="auth-title">
+            <h1>Medical Center</h1>
+            <p className="university-name">Faculty of Engineering</p>
+            <p className="university-name">University of Ruhuna</p>
+          </div>
+        </div>
+        
+        <h2 className="login-heading">Welcome Back</h2>
+        <p className="login-subtitle">Sign in to your account</p>
+        
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
           

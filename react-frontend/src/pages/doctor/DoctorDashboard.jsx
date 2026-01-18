@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import appointmentService from '../../services/appointmentService';
 import prescriptionService from '../../services/prescriptionService';
+import { authService } from '../../services/authService';
 import SignatureManager from '../../components/SignatureManager';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [medicalNotes, setMedicalNotes] = useState('');
@@ -114,10 +118,20 @@ function DoctorDashboard() {
 
   // Load queue on mount and refresh every 30 seconds
   useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+    }
     fetchQueue();
     const interval = setInterval(fetchQueue, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Handle logout
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate('/login');
+  };
 
   // Count appointments by status
   const stats = {
@@ -128,10 +142,18 @@ function DoctorDashboard() {
 
   return (
     <div className="doctor-dashboard">
-      <h1>Doctor Dashboard</h1>
+      {/* Navigation Bar */}
+      <nav className="dashboard-nav">
+        <h1>Doctor Dashboard</h1>
+        <div className="nav-user">
+          <span className="user-name">👨‍⚕️ Dr. {user?.name}</span>
+          <button onClick={handleLogout} className="btn-logout">Logout</button>
+        </div>
+      </nav>
 
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      <div className="dashboard-content">
+        {error && <div className="alert alert-error">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
 
       {/* Stats Cards */}
       <div className="stats-grid">
@@ -417,6 +439,7 @@ function DoctorDashboard() {
       {/* E-Signature Management Section */}
       <div style={{ margin: '30px auto', maxWidth: '1200px', padding: '0 20px' }}>
         <SignatureManager />
+      </div>
       </div>
     </div>
   );

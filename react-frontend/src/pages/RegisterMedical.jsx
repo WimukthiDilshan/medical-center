@@ -57,8 +57,17 @@ function RegisterMedical() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Medical Personnel Registration</h2>
-        <p className="info-text">Your account will require admin approval before you can login.</p>
+        <div className="auth-header">
+          <img src="http://localhost:8000/images/logo.jpg" alt="University Logo" className="auth-logo" />
+          <div className="auth-title">
+            <h1>Medical Center</h1>
+            <p className="university-name">Faculty of Engineering</p>
+            <p className="university-name">University of Ruhuna</p>
+          </div>
+        </div>
+        
+        <h2 className="login-heading">Medical Personnel Registration</h2>
+        <p className="login-subtitle">Your account will require admin approval</p>
         
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}

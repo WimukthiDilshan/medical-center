@@ -1,17 +1,17 @@
 .student-dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
 }
 
 /* Navigation */
 .dashboard-nav {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
   backdrop-filter: blur(10px);
-  padding: 20px 40px;
+  padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -19,8 +19,8 @@
 
 .dashboard-nav h1 {
   margin: 0;
-  color: #2c3e50;
-  font-size: 1.8rem;
+  color: white;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 
@@ -32,34 +32,36 @@
 
 .user-name {
   font-weight: 600;
-  color: #2c3e50;
+  color: white !important;
 }
 
 .user-id {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
+  border: 2px solid white;
 }
 
 .btn-logout {
-  background: #e74c3c;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: white;
-  border: none;
+  border: 2px solid #dc2626;
   padding: 10px 25px;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
 }
 
 .btn-logout:hover {
-  background: #c0392b;
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  border-color: #b91c1c;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
 }
 
 /* Dashboard Content */
@@ -73,14 +75,14 @@
 .loading-screen {
   text-align: center;
   padding: 100px 20px;
-  color: white;
+  color: #134e4a;
 }
 
 .spinner {
   width: 60px;
   height: 60px;
-  border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 5px solid rgba(20, 184, 166, 0.3);
+  border-top-color: #14b8a6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -116,15 +118,15 @@
   left: 0;
   right: 0;
   height: 8px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #14b8a6, #0d9488);
 }
 
 .appointment-alert.green::before {
-  background: linear-gradient(90deg, #11998e, #38ef7d);
+  background: linear-gradient(90deg, #059669, #047857);
 }
 
 .appointment-alert.red::before {
-  background: linear-gradient(90deg, #eb3349, #f45c43);
+  background: linear-gradient(90deg, #ea580c, #d97706);
 }
 
 .appointment-alert.pulse {
@@ -143,8 +145,8 @@
 }
 
 .alert-icon {
-  font-size: 5rem;
-  animation: bounce 1s ease-in-out infinite;
+  font-size: 2.5rem;
+  animation: bounce 1s infinite;
 }
 
 @keyframes bounce {
@@ -152,7 +154,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
 
@@ -168,14 +170,14 @@
 }
 
 .appointment-alert.green h2 {
-  background: linear-gradient(90deg, #11998e, #38ef7d);
+  background: linear-gradient(90deg, #059669, #047857);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .appointment-alert.red h2 {
-  background: linear-gradient(90deg, #eb3349, #f45c43);
+  background: linear-gradient(90deg, #ea580c, #d97706);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -190,13 +192,13 @@
 .appointment-details p {
   margin: 0;
   font-size: 1.1rem;
-  color: #555;
+  color: #115e59;
 }
 
 .appointment-number {
   font-weight: 700;
   font-size: 1.5rem !important;
-  color: #2c3e50 !important;
+  color: #134e4a !important;
 }
 
 .appointment-time {
@@ -218,8 +220,9 @@
 
 .upcoming-section h2 {
   margin: 0 0 25px 0;
-  color: #2c3e50;
+  color: #134e4a;
   font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .appointments-list {
@@ -229,17 +232,17 @@
 }
 
 .appointment-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: white;
   border-radius: 15px;
   padding: 20px;
   transition: all 0.3s;
-  border: 2px solid transparent;
+  border: 2px solid #d1fae5;
 }
 
 .appointment-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
+  border-color: #14b8a6;
 }
 
 .card-header {
@@ -252,24 +255,24 @@
 .apt-number {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #2c3e50;
+  color: #134e4a;
 }
 
 .priority-badge {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .priority-badge.urgent {
-  background: #fee;
-  color: #c0392b;
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+  color: #92400e;
 }
 
 .priority-badge.normal {
-  background: #efe;
-  color: #27ae60;
+  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+  color: white;
 }
 
 .card-body {
@@ -289,12 +292,12 @@
 }
 
 .info-row .text {
-  color: #555;
+  color: #115e59;
   font-size: 0.95rem;
 }
 
 .status-pending {
-  color: #f39c12 !important;
+  color: #d97706 !important;
   font-weight: 600;
 }
 
@@ -315,18 +318,19 @@
 }
 
 .no-appointments h2 {
-  color: #2c3e50;
+  color: #134e4a;
   margin-bottom: 15px;
+  font-weight: 700;
 }
 
 .no-appointments p {
-  color: #7f8c8d;
+  color: #115e59;
   font-size: 1.1rem;
   margin: 10px 0;
 }
 
 .info-text {
-  color: #3498db !important;
+  color: #14b8a6 !important;
   font-weight: 600;
   margin-top: 20px !important;
 }
@@ -343,13 +347,15 @@
   border-radius: 15px;
   padding: 25px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 20px rgba(20, 184, 166, 0.15);
   transition: all 0.3s;
+  border: 2px solid #d1fae5;
 }
 
 .info-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(20, 184, 166, 0.3);
+  border-color: #14b8a6;
 }
 
 .card-icon {
@@ -358,13 +364,14 @@
 }
 
 .info-card h3 {
-  color: #2c3e50;
+  color: #134e4a;
   margin: 0 0 10px 0;
   font-size: 1.2rem;
+  font-weight: 700;
 }
 
 .info-card p {
-  color: #7f8c8d;
+  color: #115e59;
   margin: 0;
   font-size: 0.95rem;
 }
@@ -436,9 +443,10 @@
 }
 
 .lab-reports-section h2 {
-  color: #2c3e50;
+  color: #134e4a;
   margin-bottom: 25px;
   font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .lab-reports-grid {
@@ -451,14 +459,14 @@
   background: white;
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #007bff;
+  box-shadow: 0 5px 20px rgba(20, 184, 166, 0.15);
+  border-left: 4px solid #14b8a6;
   transition: all 0.3s;
 }
 
 .lab-report-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(20, 184, 166, 0.3);
 }
 
 .report-header {
@@ -473,11 +481,11 @@
 .report-id {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #007bff;
+  color: #14b8a6;
 }
 
 .report-date {
-  color: #666;
+  color: #115e59;
   font-size: 0.9rem;
 }
 
@@ -487,14 +495,14 @@
 
 .report-label {
   font-weight: 600;
-  color: #555;
+  color: #115e59;
   margin-bottom: 8px;
 }
 
 .report-text {
-  color: #333;
+  color: #134e4a;
   line-height: 1.6;
-  background: #f8f9fa;
+  background: #f0fdfa;
   padding: 12px;
   border-radius: 8px;
   white-space: pre-wrap;
@@ -507,34 +515,46 @@
   margin-top: 20px;
   padding-top: 15px;
   border-top: 2px solid #f0f0f0;
+  gap: 15px;
 }
 
 .approved-badge {
-  background: #28a745;
+  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
   color: white;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
 }
 
 .btn-download {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  flex: 1;
+  font-size: 0.9rem;
 }
 
 .btn-download:hover {
   transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
 }
 
 @media (max-width: 768px) {
