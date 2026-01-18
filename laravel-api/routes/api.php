@@ -12,6 +12,8 @@ use App\Http\Controllers\MedicalCertificateController;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

@@ -11,6 +11,7 @@ function Login() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -23,20 +24,42 @@ function Login() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setLoadingMessage('Verifying credentials...');
 
     try {
       const response = await authService.login(formData.email, formData.password);
       
       if (response.success) {
-        const role = response.user.role;
-        navigate(`/dashboard/${role}`);
+        // Check if OTP verification is required
+        if (response.requires_otp) {
+          setLoadingMessage('OTP sent to your email! Redirecting...');
+          // Small delay to show the message
+          setTimeout(() => {
+            navigate('/verify-otp', {
+              state: {
+                userId: response.user_id,
+                email: response.email,
+                role: response.role
+              }
+            });
+          }, 800);
+        } else {
+          // Normal login flow (student, staff, admin)
+          setLoadingMessage('Login successful!');
+          const role = response.user.role;
+          setTimeout(() => {
+            navigate(`/dashboard/${role}`);
+          }, 500);
+        }
       } else {
         setError(response.message || 'Login failed');
+        setLoading(false);
+        setLoadingMessage('');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred during login');
-    } finally {
       setLoading(false);
+      setLoadingMessage('');
     }
   };
 
@@ -57,6 +80,7 @@ function Login() {
         
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
+          {loadingMessage && <div className="info-message">✉️ {loadingMessage}</div>}
           
           <div className="form-group">
             <label htmlFor="email">Email</label>

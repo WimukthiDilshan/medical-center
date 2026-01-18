@@ -369,6 +369,33 @@
   font-size: 1.2rem;
 }
 
+.info-message {
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+  color: #1e40af;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  border-left: 4px solid #3b82f6;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes shake {
   0%, 100% {
     transform: translateX(0);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -89,6 +90,38 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Check if user needs 2FA (medical staff only)
+        if (in_array($user->role, ['doctor', 'nurse', 'pharmacist'])) {
+            // Generate OTP
+            $otp = sprintf("%06d", mt_rand(1, 999999));
+            $user->otp_code = $otp;
+            $user->otp_expires_at = now()->addMinutes(5);
+            $user->save();
+
+            // Send OTP via email
+            try {
+                Mail::raw("Your OTP code is: {$otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this code, please ignore this email.", function ($message) use ($user) {
+                    $message->to($user->email)
+                            ->subject('Your Login OTP Code - Medical Center');
+                });
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send OTP. Please try again.'
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'requires_otp' => true,
+                'message' => 'OTP sent to your email',
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role
+            ]);
+        }
+
+        // For non-medical staff (student/staff/admin), login directly
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
@@ -164,6 +197,127 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Password changed successfully'
+        ]);
+    }
+
+    /**
+     * Verify OTP and complete login
+     */
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'otp_code' => 'required|string|size:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::findOrFail($request->user_id);
+
+        // Check if OTP exists
+        if (!$user->otp_code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No OTP found. Please request a new one.'
+            ], 400);
+        }
+
+        // Check if OTP has expired
+        if (now()->isAfter($user->otp_expires_at)) {
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP has expired. Please request a new one.'
+            ], 400);
+        }
+
+        // Verify OTP
+        if ($user->otp_code !== $request->otp_code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid OTP code'
+            ], 401);
+        }
+
+        // Clear OTP
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->save();
+
+        // Create token
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'staff_id' => $user->staff_id,
+                'is_approved' => $user->is_approved,
+            ],
+            'token' => $token
+        ]);
+    }
+
+    /**
+     * Resend OTP
+     */
+    public function resendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::findOrFail($request->user_id);
+
+        // Check if user is medical staff
+        if (!in_array($user->role, ['doctor', 'nurse', 'pharmacist'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP not required for this user'
+            ], 400);
+        }
+
+        // Generate new OTP
+        $otp = sprintf("%06d", mt_rand(1, 999999));
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
+
+        // Send OTP via email
+        try {
+            Mail::raw("Your OTP code is: {$otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this code, please ignore this email.", function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Your Login OTP Code - Medical Center');
+            });
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send OTP. Please try again.'
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'New OTP sent to your email'
         ]);
     }
 }
