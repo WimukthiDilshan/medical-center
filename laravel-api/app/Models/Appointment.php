@@ -57,6 +57,14 @@ class Appointment extends Model
     }
 
     /**
+     * Get the prescription for this appointment
+     */
+    public function prescription()
+    {
+        return $this->hasOne(Prescription::class);
+    }
+
+    /**
      * Boot function to auto-increment appointment number
      */
     protected static function boot()

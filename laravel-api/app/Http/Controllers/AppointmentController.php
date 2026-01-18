@@ -187,7 +187,7 @@ class AppointmentController extends Controller
         ]);
 
         // Create prescription if medications provided
-        if ($request->has('medications') && !empty($request->medications)) {
+        if ($request->has('medications') && !empty(trim($request->medications))) {
             \App\Models\Prescription::create([
                 'appointment_id' => $appointment->id,
                 'patient_id' => $appointment->user_id,
