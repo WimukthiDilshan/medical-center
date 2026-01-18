@@ -238,16 +238,6 @@ function StudentStaffDashboard() {
                 <h3>Medical Center</h3>
                 <p>Mon-Fri: 8:00 AM - 5:00 PM</p>
               </div>
-              <div className="info-card">
-                <div className="card-icon">🚨</div>
-                <h3>Emergency</h3>
-                <p>Call: 911 (24/7)</p>
-              </div>
-              <div className="info-card">
-                <div className="card-icon">📞</div>
-                <h3>Contact Nurse</h3>
-                <p>Visit Nurse's Office</p>
-              </div>
               <div className="info-card clickable" onClick={() => navigate('/medical-certificate')}>
                 <div className="card-icon">📄</div>
                 <h3>Medical Certificate</h3>
