@@ -69,6 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [PrescriptionController::class, 'show']);
         Route::get('/patient/{patientId}', [PrescriptionController::class, 'patientPrescriptions']);
         
+        // Patient routes (student/staff)
+        Route::get('/my/list', [PrescriptionController::class, 'myPrescriptions']);
+        Route::get('/download/{id}', [PrescriptionController::class, 'download']);
+        
         // Doctor routes
         Route::middleware('role:doctor')->group(function () {
             Route::post('/', [PrescriptionController::class, 'store']);

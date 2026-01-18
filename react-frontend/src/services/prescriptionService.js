@@ -65,6 +65,47 @@ const prescriptionService = {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
+  },
+
+  // Get my prescriptions (for logged-in patient)
+  getMyPrescriptions: async () => {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${API_URL}/prescriptions/my/list`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  // Download prescription PDF
+  downloadPrescription: async (prescriptionId) => {
+    const token = localStorage.getItem('token');
+    const url = `${API_URL}/prescriptions/download/${prescriptionId}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/pdf'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to download prescription');
+    }
+
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = `Prescription_${prescriptionId}.pdf`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    
+    setTimeout(() => {
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    }, 100);
   }
 };
 

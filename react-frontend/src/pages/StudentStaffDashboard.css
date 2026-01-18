@@ -478,6 +478,83 @@
   font-weight: 700;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #134e4a;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: #115e59;
+  font-size: 0.95rem;
+}
+
+.appointment-filter {
+  padding: 10px 18px;
+  border: 2px solid #99f6e4;
+  border-radius: 25px;
+  background: white;
+  color: #0d9488;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  outline: none;
+  min-width: 250px;
+}
+
+.appointment-filter:hover {
+  border-color: #14b8a6;
+  background: #f0fdfa;
+}
+
+.appointment-filter:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.appointment-filter option {
+  padding: 8px;
+}
+
+.appointment-filter optgroup {
+  font-weight: bold;
+  color: #0d9488;
+}
+
+.no-results-message {
+  grid-column: 1 / -1;
+  background: #f0fdfa;
+  border: 2px dashed #99f6e4;
+  border-radius: 15px;
+  padding: 40px;
+  text-align: center;
+  color: #115e59;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.no-results-message p {
+  margin: 0;
+}
+
 .lab-reports-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -597,6 +674,293 @@
   }
 
   .btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .appointment-filter {
+    width: 100%;
+  }
+}
+
+/* Prescriptions Section */
+.prescriptions-section {
+  margin-top: 40px;
+}
+
+.prescriptions-section h2 {
+  color: #134e4a;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.section-subtitle {
+  color: #115e59;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.prescriptions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.prescription-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(13, 148, 136, 0.15);
+  border: 3px solid #99f6e4;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.prescription-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #14b8a6, #0d9488);
+}
+
+.prescription-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(13, 148, 136, 0.25);
+  border-color: #14b8a6;
+}
+
+.prescription-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed #d1fae5;
+}
+
+.rx-symbol {
+  font-size: 3.5rem;
+  color: #14b8a6;
+  font-weight: 700;
+  line-height: 1;
+  font-family: 'Times New Roman', serif;
+  text-shadow: 2px 2px 4px rgba(20, 184, 166, 0.2);
+}
+
+.prescription-info {
+  flex: 1;
+}
+
+.prescription-id {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0d9488;
+  margin-bottom: 5px;
+}
+
+.prescription-date {
+  color: #115e59;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.status-dispensed {
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+  color: #1e40af;
+}
+
+.status-completed {
+  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+  color: #065f46;
+}
+
+.prescription-body {
+  margin-bottom: 25px;
+}
+
+.doctor-info {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border-left: 4px solid #14b8a6;
+}
+
+.doctor-label {
+  font-size: 0.85rem;
+  color: #115e59;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.doctor-name {
+  font-size: 1.2rem;
+  color: #0d9488;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.doctor-contact {
+  font-size: 0.9rem;
+  color: #115e59;
+}
+
+.medications-preview {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #e5e7eb;
+}
+
+.medications-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.medications-list {
+  color: #1f2937;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.instructions-preview {
+  background: #fffbeb;
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid #f59e0b;
+}
+
+.instructions-label {
+  font-size: 0.85rem;
+  color: #92400e;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instructions-text {
+  color: #78350f;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.prescription-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 2px dashed #d1fae5;
+}
+
+.signature-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #065f46;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  padding: 10px 15px;
+  border-radius: 25px;
+  flex: 1;
+}
+
+.signature-icon {
+  font-size: 1.2rem;
+}
+
+.btn-download-prescription {
+  background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+  font-size: 1rem;
+}
+
+.btn-download-prescription:hover {
+  background: linear-gradient(135deg, #115e59 0%, #134e4a 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.45);
+}
+
+.btn-download-prescription:active {
+  transform: translateY(-1px);
+}
+
+.download-icon {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 768px) {
+  .prescriptions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prescription-card {
+    padding: 20px;
+  }
+
+  .prescription-header {
+    flex-wrap: wrap;
+  }
+
+  .rx-symbol {
+    font-size: 2.5rem;
+  }
+
+  .prescription-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .signature-badge,
+  .btn-download-prescription {
     width: 100%;
     justify-content: center;
   }

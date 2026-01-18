@@ -75,8 +75,30 @@ function PharmacistDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Dispense prescription
+  const handleDispense = async (id) => {
+    if (!window.confirm('Are you sure you want to dispense this prescription?')) {
+      return;
+    }
+    
+    setError('');
+    setSuccess('');
+    try {
+      await prescriptionService.dispense(id);
+      setSuccess('Prescription dispensed successfully');
+      fetchPrescriptions();
+      setSelectedPrescription(null);
+    } catch (err) {
+      setError('Failed to dispense prescription');
+    }
+  };
+
   // Complete prescription
   const handleComplete = async (id) => {
+    if (!window.confirm('Are you sure you want to mark this prescription as completed?')) {
+      return;
+    }
+    
     setError('');
     setSuccess('');
     try {
@@ -292,11 +314,11 @@ function PharmacistDashboard() {
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleComplete(prescription.id);
+                            handleDispense(prescription.id);
                           }}
-                          className="btn-action btn-complete"
+                          className="btn-action btn-dispense"
                         >
-                          ✓ Complete
+                          ✅ Dispense
                         </button>
                       )}
                       {prescription.status === 'dispensed' && (

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PrescriptionController extends Controller
 {
@@ -148,5 +149,36 @@ class PrescriptionController extends Controller
             ->get();
 
         return response()->json($prescriptions);
+    }
+
+    /**
+     * Get my prescriptions (for authenticated patient)
+     */
+    public function myPrescriptions(Request $request)
+    {
+        $user = $request->user();
+        
+        $prescriptions = Prescription::with(['doctor', 'appointment', 'pharmacist'])
+            ->where('patient_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($prescriptions);
+    }
+
+    /**
+     * Download prescription as PDF
+     */
+    public function download($id)
+    {
+        $prescription = Prescription::with(['patient', 'doctor', 'appointment'])->findOrFail($id);
+        
+        // Generate PDF
+        $pdf = PDF::loadView('prescriptions.prescription-pdf', [
+            'prescription' => $prescription
+        ]);
+
+        // Return PDF download
+        return $pdf->download('Prescription_' . $prescription->id . '.pdf');
     }
 }

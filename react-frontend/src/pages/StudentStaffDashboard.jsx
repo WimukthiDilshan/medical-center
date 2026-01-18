@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import appointmentService from '../services/appointmentService';
+import prescriptionService from '../services/prescriptionService';
 import './StudentStaffDashboard.css';
 
 function StudentStaffDashboard() {
@@ -10,6 +11,11 @@ function StudentStaffDashboard() {
   const [currentAppointment, setCurrentAppointment] = useState(null);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [labReports, setLabReports] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [allAppointments, setAllAppointments] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState('latest');
+  const [filteredLabReports, setFilteredLabReports] = useState([]);
+  const [filteredPrescriptions, setFilteredPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +26,9 @@ function StudentStaffDashboard() {
     }
     setUser(currentUser);
     fetchAppointments(currentUser.id);
+    fetchAllAppointments();
     fetchLabReports();
+    fetchPrescriptions();
   }, [navigate]);
 
   const fetchLabReports = async () => {
@@ -33,8 +41,66 @@ function StudentStaffDashboard() {
       });
       const data = await response.json();
       setLabReports(data);
+      setFilteredLabReports(data.slice(0, 1)); // Show only latest by default
     } catch (err) {
       console.error('Failed to fetch lab reports:', err);
+    }
+  };
+
+  const fetchPrescriptions = async () => {
+    try {
+      const data = await prescriptionService.getMyPrescriptions();
+      setPrescriptions(data);
+      setFilteredPrescriptions(data.slice(0, 1)); // Show only latest by default
+    } catch (err) {
+      console.error('Failed to fetch prescriptions:', err);
+    }
+  };
+
+  const fetchAllAppointments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8000/api/appointments/my-appointments', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      // Filter only completed appointments that might have lab reports or prescriptions
+      const completedAppts = data.filter(apt => apt.status === 'completed');
+      setAllAppointments(completedAppts);
+    } catch (err) {
+      console.error('Failed to fetch all appointments:', err);
+    }
+  };
+
+  const handleAppointmentFilter = (value) => {
+    setSelectedAppointment(value);
+    
+    if (value === 'latest') {
+      // Show only latest prescription and lab report
+      setFilteredPrescriptions(prescriptions.slice(0, 1));
+      setFilteredLabReports(labReports.slice(0, 1));
+    } else if (value === 'all') {
+      // Show all prescriptions and lab reports
+      setFilteredPrescriptions(prescriptions);
+      setFilteredLabReports(labReports);
+    } else {
+      // Filter by specific appointment ID
+      const appointmentId = parseInt(value);
+      const filteredPrescr = prescriptions.filter(p => p.appointment_id === appointmentId);
+      const filteredLab = labReports.filter(l => l.id === appointmentId);
+      setFilteredPrescriptions(filteredPrescr);
+      setFilteredLabReports(filteredLab);
+    }
+  };
+
+  const handleDownloadPrescription = async (prescriptionId) => {
+    try {
+      await prescriptionService.downloadPrescription(prescriptionId);
+    } catch (err) {
+      console.error('Failed to download prescription:', err);
+      alert('Failed to download prescription. Please try again.');
     }
   };
 
@@ -248,31 +314,155 @@ function StudentStaffDashboard() {
             {/* Lab Reports Section */}
             {labReports.length > 0 && (
               <div className="lab-reports-section">
-                <h2>📋 My Lab Reports</h2>
+                <div className="section-header">
+                  <h2>📋 My Lab Reports</h2>
+                  <div className="filter-container">
+                    <label htmlFor="lab-filter">Filter by Appointment:</label>
+                    <select 
+                      id="lab-filter"
+                      value={selectedAppointment} 
+                      onChange={(e) => handleAppointmentFilter(e.target.value)}
+                      className="appointment-filter"
+                    >
+                      <option value="latest">Latest Only</option>
+                      <option value="all">All Lab Reports</option>
+                      <optgroup label="By Appointment">
+                        {allAppointments.map((apt) => (
+                          <option key={apt.id} value={apt.id}>
+                            Appointment #{apt.appointment_number} - {new Date(apt.appointment_date).toLocaleDateString()}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
                 <div className="lab-reports-grid">
-                  {labReports.map((appointment) => (
-                    <div key={appointment.id} className="lab-report-card">
-                      <div className="report-header">
-                        <div className="report-id">Appointment #{appointment.appointment_number}</div>
-                        <div className="report-date">
-                          {new Date(appointment.completed_at).toLocaleDateString()}
+                  {filteredLabReports.length === 0 ? (
+                    <div className="no-results-message">
+                      <p>No lab reports found for the selected appointment.</p>
+                    </div>
+                  ) : (
+                    filteredLabReports.map((appointment) => (
+                      <div key={appointment.id} className="lab-report-card">
+                        <div className="report-header">
+                          <div className="report-id">Appointment #{appointment.appointment_number}</div>
+                          <div className="report-date">
+                            {new Date(appointment.completed_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="report-content">
+                          <p className="report-label">Lab Tests Required:</p>
+                          <p className="report-text">{appointment.lab_reports}</p>
+                        </div>
+                        <div className="report-footer">
+                          <span className="approved-badge">✓ Doctor Approved</span>
+                          <button 
+                            onClick={() => downloadLabReport(appointment.id)}
+                            className="btn-download"
+                          >
+                            📥 Download PDF
+                          </button>
                         </div>
                       </div>
-                      <div className="report-content">
-                        <p className="report-label">Lab Tests Required:</p>
-                        <p className="report-text">{appointment.lab_reports}</p>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Prescriptions Section */}
+            {prescriptions.length > 0 && (
+              <div className="prescriptions-section">
+                <div className="section-header">
+                  <h2>💊 My Prescriptions</h2>
+                  <div className="filter-container">
+                    <label htmlFor="prescription-filter">Filter by Appointment:</label>
+                    <select 
+                      id="prescription-filter"
+                      value={selectedAppointment} 
+                      onChange={(e) => handleAppointmentFilter(e.target.value)}
+                      className="appointment-filter"
+                    >
+                      <option value="latest">Latest Only</option>
+                      <option value="all">All Prescriptions</option>
+                      <optgroup label="By Appointment">
+                        {allAppointments.map((apt) => (
+                          <option key={apt.id} value={apt.id}>
+                            Appointment #{apt.appointment_number} - {new Date(apt.appointment_date).toLocaleDateString()}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+                <p className="section-subtitle">Download prescriptions for medications not available in campus pharmacy</p>
+                <div className="prescriptions-grid">
+                  {filteredPrescriptions.length === 0 ? (
+                    <div className="no-results-message">
+                      <p>No prescriptions found for the selected appointment.</p>
+                    </div>
+                  ) : (
+                    filteredPrescriptions.map((prescription) => (
+                      <div key={prescription.id} className="prescription-card">
+                        <div className="prescription-header">
+                          <div className="rx-symbol">℞</div>
+                          <div className="prescription-info">
+                            <div className="prescription-id">Prescription #{prescription.id}</div>
+                          <div className="prescription-date">
+                            {new Date(prescription.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className={`status-badge status-${prescription.status}`}>
+                          {prescription.status === 'pending' && '⏳ Pending'}
+                          {prescription.status === 'dispensed' && '✓ Dispensed'}
+                          {prescription.status === 'completed' && '✓ Completed'}
+                        </div>
                       </div>
-                      <div className="report-footer">
-                        <span className="approved-badge">✓ Doctor Approved</span>
+                      
+                      <div className="prescription-body">
+                        <div className="doctor-info">
+                          <div className="doctor-label">Prescribed by:</div>
+                          <div className="doctor-name">Dr. {prescription.doctor?.name || 'Unknown'}</div>
+                          {prescription.doctor?.email && (
+                            <div className="doctor-contact">{prescription.doctor.email}</div>
+                          )}
+                        </div>
+
+                        <div className="medications-preview">
+                          <div className="medications-label">Medications:</div>
+                          <div className="medications-list">
+                            {prescription.medications?.substring(0, 100)}
+                            {prescription.medications?.length > 100 && '...'}
+                          </div>
+                        </div>
+
+                        {prescription.instructions && (
+                          <div className="instructions-preview">
+                            <div className="instructions-label">Instructions:</div>
+                            <div className="instructions-text">
+                              {prescription.instructions.substring(0, 80)}
+                              {prescription.instructions.length > 80 && '...'}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="prescription-footer">
+                        <div className="signature-badge">
+                          <span className="signature-icon">✍️</span>
+                          <span>Doctor's E-Signature Included</span>
+                        </div>
                         <button 
-                          onClick={() => downloadLabReport(appointment.id)}
-                          className="btn-download"
+                          onClick={() => handleDownloadPrescription(prescription.id)}
+                          className="btn-download-prescription"
                         >
-                          📥 Download PDF
+                          <span className="download-icon">📄</span>
+                          <span>Download PDF</span>
                         </button>
                       </div>
                     </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             )}

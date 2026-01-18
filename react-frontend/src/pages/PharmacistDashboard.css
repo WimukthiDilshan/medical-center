@@ -388,6 +388,18 @@
   transition: all 0.3s;
 }
 
+.btn-dispense {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+.btn-dispense:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(13, 148, 136, 0.4);
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+}
+
 .btn-complete {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;

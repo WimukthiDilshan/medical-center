@@ -1,0 +1,266 @@
+@startuml Medical_Center_ER_Diagram
+
+!define primary_key(x) <b><color:red>PK</color> x</b>
+!define foreign_key(x) <b><color:blue>FK</color> x</b>
+!define unique(x) <color:green>UQ</color> x
+
+skinparam linetype ortho
+skinparam roundcorner 10
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor Black
+    ArrowColor Black
+}
+
+title Medical Center System - Entity Relationship Diagram
+
+' ==================== USERS TABLE ====================
+entity "USERS" as users {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  unique(email) : VARCHAR(255)
+  name : VARCHAR(255)
+  role : ENUM('admin','doctor','nurse','pharmacist','student','staff')
+  signature : TEXT <<Nullable>> -- Doctor's digital signature
+  staff_id : VARCHAR(255) <<Nullable>>
+  is_approved : BOOLEAN DEFAULT false
+  phone : VARCHAR(255) <<Nullable>>
+  email_verified_at : TIMESTAMP <<Nullable>>
+  password : VARCHAR(255)
+  otp_code : VARCHAR(6) <<Nullable>> -- 2FA OTP
+  otp_expires_at : TIMESTAMP <<Nullable>>
+  remember_token : VARCHAR(100) <<Nullable>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' ==================== APPOINTMENTS TABLE ====================
+entity "APPOINTMENTS" as appointments {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  unique(appointment_number) : INTEGER
+  foreign_key(user_id) : BIGINT -- Patient
+  foreign_key(created_by) : BIGINT -- Nurse who created
+  foreign_key(completed_by) : BIGINT <<Nullable>> -- Doctor/Nurse
+  appointment_date : DATE
+  appointment_time : TIME
+  reason : TEXT <<Nullable>>
+  status : ENUM('pending','checked_in','in_progress','completed','cancelled') DEFAULT 'pending'
+  priority : ENUM('normal','urgent') DEFAULT 'normal'
+  medical_notes : TEXT <<Nullable>>
+  lab_reports : TEXT <<Nullable>> -- PDF file paths
+  checked_in_at : TIMESTAMP <<Nullable>>
+  completed_at : TIMESTAMP <<Nullable>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' ==================== PRESCRIPTIONS TABLE ====================
+entity "PRESCRIPTIONS" as prescriptions {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  foreign_key(appointment_id) : BIGINT
+  foreign_key(patient_id) : BIGINT
+  foreign_key(doctor_id) : BIGINT
+  foreign_key(dispensed_by) : BIGINT <<Nullable>> -- Pharmacist
+  medications : TEXT
+  status : ENUM('pending','dispensed','completed') DEFAULT 'pending'
+  dispensed_at : TIMESTAMP <<Nullable>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' ==================== MEDICAL CERTIFICATES TABLE ====================
+entity "MEDICAL_CERTIFICATES" as medical_certificates {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  foreign_key(user_id) : BIGINT -- Requester (student/staff)
+  foreign_key(appointment_id) : BIGINT <<Nullable>>
+  foreign_key(doctor_id) : BIGINT <<Nullable>> -- Approver
+  reason : TEXT
+  start_date : DATE
+  end_date : DATE
+  days_requested : INTEGER
+  status : ENUM('pending','approved','rejected') DEFAULT 'pending'
+  doctor_notes : TEXT <<Nullable>>
+  rejection_reason : TEXT <<Nullable>>
+  document_path : VARCHAR(255) <<Nullable>> -- PDF path
+  approved_at : TIMESTAMP <<Nullable>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' ==================== PERSONAL ACCESS TOKENS TABLE ====================
+entity "PERSONAL_ACCESS_TOKENS" as tokens {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  foreign_key(tokenable_id) : BIGINT
+  tokenable_type : VARCHAR(255)
+  name : VARCHAR(255)
+  unique(token) : VARCHAR(64)
+  abilities : TEXT <<Nullable>>
+  last_used_at : TIMESTAMP <<Nullable>>
+  expires_at : TIMESTAMP <<Nullable>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+' ==================== PASSWORD RESET TOKENS TABLE ====================
+entity "PASSWORD_RESET_TOKENS" as password_resets {
+  primary_key(email) : VARCHAR(255)
+  --
+  token : VARCHAR(255)
+  created_at : TIMESTAMP <<Nullable>>
+}
+
+' ==================== SESSIONS TABLE ====================
+entity "SESSIONS" as sessions {
+  primary_key(id) : VARCHAR(255)
+  --
+  foreign_key(user_id) : BIGINT <<Nullable>>
+  ip_address : VARCHAR(45) <<Nullable>>
+  user_agent : TEXT <<Nullable>>
+  payload : LONGTEXT
+  last_activity : INTEGER
+}
+
+' ==================== CACHE TABLE ====================
+entity "CACHE" as cache {
+  primary_key(key) : VARCHAR(255)
+  --
+  value : MEDIUMTEXT
+  expiration : INTEGER
+}
+
+' ==================== CACHE LOCKS TABLE ====================
+entity "CACHE_LOCKS" as cache_locks {
+  primary_key(key) : VARCHAR(255)
+  --
+  owner : VARCHAR(255)
+  expiration : INTEGER
+}
+
+' ==================== JOBS TABLE ====================
+entity "JOBS" as jobs {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  queue : VARCHAR(255)
+  payload : LONGTEXT
+  attempts : TINYINT UNSIGNED
+  reserved_at : INTEGER UNSIGNED <<Nullable>>
+  available_at : INTEGER UNSIGNED
+  created_at : INTEGER UNSIGNED
+}
+
+' ==================== JOB BATCHES TABLE ====================
+entity "JOB_BATCHES" as job_batches {
+  primary_key(id) : VARCHAR(255)
+  --
+  name : VARCHAR(255)
+  total_jobs : INTEGER
+  pending_jobs : INTEGER
+  failed_jobs : INTEGER
+  failed_job_ids : LONGTEXT
+  options : MEDIUMTEXT <<Nullable>>
+  cancelled_at : INTEGER <<Nullable>>
+  created_at : INTEGER
+  finished_at : INTEGER <<Nullable>>
+}
+
+' ==================== FAILED JOBS TABLE ====================
+entity "FAILED_JOBS" as failed_jobs {
+  primary_key(id) : BIGINT <<AUTO_INCREMENT>>
+  --
+  unique(uuid) : VARCHAR(255)
+  connection : TEXT
+  queue : TEXT
+  payload : LONGTEXT
+  exception : LONGTEXT
+  failed_at : TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+}
+
+' ==================== RELATIONSHIPS ====================
+
+' Users to Appointments
+users ||--o{ appointments : "patient\n(user_id)"
+users ||--o{ appointments : "created_by\n(nurse)"
+users ||--o{ appointments : "completed_by\n(doctor/nurse)"
+
+' Appointments to Prescriptions
+appointments ||--o{ prescriptions : "has prescriptions"
+
+' Users to Prescriptions
+users ||--o{ prescriptions : "patient\n(patient_id)"
+users ||--o{ prescriptions : "prescribed by\n(doctor_id)"
+users ||--o{ prescriptions : "dispensed by\n(pharmacist)"
+
+' Users to Medical Certificates
+users ||--o{ medical_certificates : "requester\n(user_id)"
+users ||--o{ medical_certificates : "approver\n(doctor_id)"
+
+' Appointments to Medical Certificates
+appointments ||--o{ medical_certificates : "linked to"
+
+' Users to Tokens
+users ||--o{ tokens : "owns tokens"
+
+' Users to Sessions
+users ||--o{ sessions : "has sessions"
+
+' Legend
+legend right
+  |= Symbol |= Meaning |
+  | <b><color:red>PK</color></b> | Primary Key |
+  | <b><color:blue>FK</color></b> | Foreign Key |
+  | <color:green>UQ</color> | Unique Constraint |
+  | ||--o{ | One to Many |
+  
+  **User Roles:**
+  • Admin - System management
+  • Doctor - Complete appointments, prescriptions, approve certificates
+  • Nurse - Create appointments, check-in patients
+  • Pharmacist - Dispense medications
+  • Student/Staff - Request appointments & certificates
+  
+  **2FA Authentication:**
+  • Email OTP required for: Doctor, Nurse, Pharmacist
+  • 6-digit code, 5-minute expiration
+  
+  **Key Features:**
+  • Appointment management with queue status
+  • Prescription workflow
+  • Lab report upload/download (PDF)
+  • Medical certificate requests & approval
+  • Digital signature for doctors
+  • Password change for all users
+endlegend
+
+note top of users
+  **USERS TABLE**
+  Central authentication and user management.
+  Supports 6 roles with approval system
+  for medical staff. Includes 2FA via OTP.
+end note
+
+note top of appointments
+  **APPOINTMENTS TABLE**
+  Core workflow: Nurse creates → Patient checks-in
+  → Doctor completes → Lab reports uploaded
+  Tracks status through entire patient journey.
+end note
+
+note top of prescriptions
+  **PRESCRIPTIONS TABLE**
+  Created by doctor after appointment.
+  Dispensed by pharmacist.
+  Linked to appointment for audit trail.
+end note
+
+note top of medical_certificates
+  **MEDICAL CERTIFICATES TABLE**
+  Students/Staff request certificates.
+  Doctor approves with notes & signature.
+  PDF generated with approval.
+end note
+
+@enduml
