@@ -191,6 +191,7 @@ function StudentStaffDashboard() {
         <div className="nav-user">
           <span className="user-name">{user?.name}</span>
           <span className="user-id">ID: {user?.staff_id}</span>
+          <button onClick={() => navigate(`/dashboard/${user?.role}/change-password`)} className="btn-change-password">🔐 Change Password</button>
           <button onClick={handleLogout} className="btn-logout">Logout</button>
         </div>
       </nav>

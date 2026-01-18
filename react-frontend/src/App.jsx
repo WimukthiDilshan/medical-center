@@ -4,7 +4,7 @@ import RegisterStaff from './pages/RegisterStaff';
 import RegisterMedical from './pages/RegisterMedical';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminMedicalCertificates from './pages/admin/AdminMedicalCertificates';
-import ChangePassword from './pages/admin/ChangePassword';
+import ChangePassword from './pages/ChangePassword';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import MedicalCertificatesDoctor from './pages/doctor/MedicalCertificates';
 import NurseDashboard from './pages/nurse/NurseDashboard';
@@ -68,12 +68,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/dashboard/doctor/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['doctor']}>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
         
         <Route
           path="/dashboard/nurse"
           element={
             <ProtectedRoute allowedRoles={['nurse']}>
               <NurseDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/nurse/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['nurse']}>
+              <ChangePassword />
             </ProtectedRoute>
           }
         />
@@ -86,6 +104,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/dashboard/pharmacist/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['pharmacist']}>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
         
         <Route
           path="/dashboard/student"
@@ -95,12 +122,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/dashboard/student/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
         
         <Route
           path="/dashboard/staff"
           element={
             <ProtectedRoute allowedRoles={['staff']}>
               <StudentStaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/staff/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['staff']}>
+              <ChangePassword />
             </ProtectedRoute>
           }
         />

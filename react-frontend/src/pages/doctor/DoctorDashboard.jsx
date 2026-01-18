@@ -212,6 +212,9 @@ function DoctorDashboard() {
         <button onClick={() => navigate('/dashboard/doctor/medical-certificates')} className="btn-action" style={{ background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' }}>
           📄 Medical Certificates ({pendingCertificates.length})
         </button>
+        <button onClick={() => navigate('/dashboard/doctor/change-password')} className="btn-action" style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}>
+          🔐 Change Password
+        </button>
       </div>
 
       {/* Prescriptions Section */}

@@ -106,6 +106,7 @@ function PharmacistDashboard() {
         <h1>💊 Pharmacist Dashboard</h1>
         <div className="nav-user">
           <span className="user-name">{user?.name}</span>
+          <button onClick={() => navigate('/dashboard/pharmacist/change-password')} className="btn-change-password">🔐 Change Password</button>
           <button onClick={handleLogout} className="btn-logout">Logout</button>
         </div>
       </nav>

@@ -191,6 +191,7 @@ function NurseDashboard() {
         <h1>Nurse Dashboard - Appointment Management</h1>
         <div className="nav-user">
           <span className="user-name">👤 {user?.name}</span>
+          <button onClick={() => navigate('/dashboard/nurse/change-password')} className="btn-change-password">🔐 Change Password</button>
           <button onClick={handleLogout} className="btn-logout">Logout</button>
         </div>
       </nav>
