@@ -220,41 +220,6 @@ function StudentStaffDashboard() {
               </div>
             )}
 
-            {/* Upcoming Appointments */}
-            {upcomingAppointments.length > 0 && (
-              <div className="upcoming-section">
-                <h2>📅 Your Scheduled Appointments</h2>
-                <div className="appointments-list">
-                  {upcomingAppointments.map((apt) => (
-                    <div key={apt.id} className="appointment-card">
-                      <div className="card-header">
-                        <span className="apt-number">#{apt.appointment_number}</span>
-                        <span className={`priority-badge ${apt.priority}`}>
-                          {apt.priority === 'urgent' ? '🔴 Urgent' : '🟢 Normal'}
-                        </span>
-                      </div>
-                      <div className="card-body">
-                        <div className="info-row">
-                          <span className="icon">🕐</span>
-                          <span className="text">{apt.appointment_time}</span>
-                        </div>
-                        {apt.reason && (
-                          <div className="info-row">
-                            <span className="icon">📝</span>
-                            <span className="text">{apt.reason}</span>
-                          </div>
-                        )}
-                        <div className="info-row">
-                          <span className="icon">📊</span>
-                          <span className="text status-pending">Pending - Please arrive 10 min early</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* No Appointments */}
             {!currentAppointment && upcomingAppointments.length === 0 && (
               <div className="no-appointments">
