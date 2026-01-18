@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/reject-user/{id}', [AdminController::class, 'rejectUser']);
         Route::get('/users', [AdminController::class, 'getAllUsers']);
         Route::put('/change-password/{id}', [AdminController::class, 'changePassword']);
+        Route::put('/change-own-password', [AdminController::class, 'changeOwnPassword']);
     });
 
     // Appointment routes - Nurse & Doctor

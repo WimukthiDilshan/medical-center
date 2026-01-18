@@ -121,6 +121,11 @@ function AdminDashboard() {
             <h3>Medical Certificates</h3>
             <p>View and manage all medical certificate requests</p>
           </div>
+          <div className="quick-card" onClick={() => navigate('/dashboard/admin/change-password')}>
+            <div className="card-icon">🔐</div>
+            <h3>Change Password</h3>
+            <p>Update your admin account password</p>
+          </div>
         </div>
 
         <div className="tabs">

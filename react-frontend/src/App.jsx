@@ -4,6 +4,7 @@ import RegisterStaff from './pages/RegisterStaff';
 import RegisterMedical from './pages/RegisterMedical';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminMedicalCertificates from './pages/admin/AdminMedicalCertificates';
+import ChangePassword from './pages/admin/ChangePassword';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import MedicalCertificatesDoctor from './pages/doctor/MedicalCertificates';
 import NurseDashboard from './pages/nurse/NurseDashboard';
@@ -37,6 +38,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminMedicalCertificates />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/admin/change-password"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <ChangePassword />
             </ProtectedRoute>
           }
         />
