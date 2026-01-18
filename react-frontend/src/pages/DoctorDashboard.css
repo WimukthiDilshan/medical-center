@@ -1,0 +1,419 @@
+/* Medical Certificates Section */
+.medical-certificates-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.medical-certificates-section h3 {
+    color: #115e59;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+/* Certificates List */
+.certificates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Certificate Request Card */
+.cert-request-card {
+    background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+    border: 2px solid #d1fae5;
+    border-left: 4px solid #14b8a6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.cert-request-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(20, 184, 166, 0.2);
+}
+
+.cert-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #d1fae5;
+}
+
+.cert-header-info h4 {
+    color: #115e59;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+}
+
+.cert-user-role {
+    color: #0d9488;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.cert-badge {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.cert-badge.pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+/* Certificate Details */
+.cert-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1.2rem;
+    border-radius: 8px;
+}
+
+.cert-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.cert-detail-item label {
+    color: #0d9488;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cert-detail-item span {
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Certificate Reason */
+.cert-reason {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.cert-reason label {
+    color: #0d9488;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.cert-reason p {
+    color: #374151;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Certificate Appointment Info */
+.cert-appointment-info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    padding: 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.cert-appointment-info label {
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.appointment-details {
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.appointment-details p {
+    margin: 0.4rem 0;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+.appointment-details p strong {
+    color: #1e40af;
+}
+
+/* Certificate Document */
+.cert-document {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #f59e0b;
+}
+
+.cert-document label {
+    color: #92400e;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.view-document-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: #d97706;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+.view-document-btn:hover {
+    background: #d97706;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+/* Certificate Action Form */
+.cert-action-form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid #14b8a6;
+}
+
+.cert-action-form .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.cert-action-form .form-group:last-of-type {
+    margin-bottom: 1.5rem;
+}
+
+.cert-action-form label {
+    color: #115e59;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.cert-action-form textarea {
+    width: 100%;
+    padding: 0.9rem;
+    border: 2px solid #d1fae5;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.cert-action-form textarea:focus {
+    outline: none;
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Certificate Actions */
+.cert-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-review {
+    background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+.btn-review:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.4);
+}
+
+.btn-approve {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.btn-approve:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-reject:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+.btn-cancel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
+}
+
+.btn-approve:disabled,
+.btn-reject:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-size: 1.1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border-left: 4px solid #dc2626;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #047857;
+    border-left: 4px solid #059669;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1200px) {
+    .cert-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .medical-certificates-section {
+        padding: 1.5rem;
+    }
+
+    .cert-request-card {
+        padding: 1.2rem;
+    }
+
+    .cert-header-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cert-actions {
+        flex-direction: column;
+    }
+
+    .cert-actions button {
+        width: 100%;
+    }
+
+    .cert-details {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .medical-certificates-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .cert-header-info h4 {
+        font-size: 1.1rem;
+    }
+
+    .cert-action-form {
+        padding: 1rem;
+    }
+}

@@ -114,6 +114,15 @@ function AdminDashboard() {
           </div>
         )}
 
+        {/* Quick Access Cards */}
+        <div className="quick-access-cards">
+          <div className="quick-card" onClick={() => navigate('/dashboard/admin/medical-certificates')}>
+            <div className="card-icon">📋</div>
+            <h3>Medical Certificates</h3>
+            <p>View and manage all medical certificate requests</p>
+          </div>
+        </div>
+
         <div className="tabs">
           <button
             className={activeTab === 'pending' ? 'tab active' : 'tab'}

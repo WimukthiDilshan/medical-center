@@ -3,11 +3,14 @@ import Login from './pages/Login';
 import RegisterStaff from './pages/RegisterStaff';
 import RegisterMedical from './pages/RegisterMedical';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminMedicalCertificates from './pages/admin/AdminMedicalCertificates';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
+import MedicalCertificatesDoctor from './pages/doctor/MedicalCertificates';
 import NurseDashboard from './pages/nurse/NurseDashboard';
 import PharmacistDashboard from './pages/PharmacistDashboard';
 import StudentStaffDashboard from './pages/StudentStaffDashboard';
 import PatientAppointments from './pages/patient/PatientAppointments';
+import MedicalRequest from './pages/MedicalRequest';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -28,12 +31,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/dashboard/admin/medical-certificates"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminMedicalCertificates />
+            </ProtectedRoute>
+          }
+        />
         
         <Route
           path="/dashboard/doctor"
           element={
             <ProtectedRoute allowedRoles={['doctor']}>
               <DoctorDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/doctor/medical-certificates"
+          element={
+            <ProtectedRoute allowedRoles={['doctor']}>
+              <MedicalCertificatesDoctor />
             </ProtectedRoute>
           }
         />
@@ -79,6 +100,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['student', 'staff']}>
               <PatientAppointments />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/medical-certificate"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'staff']}>
+              <MedicalRequest />
             </ProtectedRoute>
           }
         />

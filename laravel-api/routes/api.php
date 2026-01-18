@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MedicalCertificateController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -84,5 +85,34 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/my-reports', [App\Http\Controllers\LabReportController::class, 'patientReports']);
             Route::get('/download/{appointmentId}', [App\Http\Controllers\LabReportController::class, 'downloadReport']);
         });
+    });
+
+    // Medical Certificate routes
+    Route::prefix('medical-certificates')->group(function () {
+        // Common routes - get all and get one
+        Route::get('/', [MedicalCertificateController::class, 'index']);
+        Route::get('/{id}', [MedicalCertificateController::class, 'show']);
+        
+        // Student/Staff routes - request new certificate
+        Route::middleware('role:student,staff')->group(function () {
+            Route::post('/', [MedicalCertificateController::class, 'store']);
+        });
+
+        // Doctor routes - approve/reject
+        Route::middleware('role:doctor')->group(function () {
+            Route::post('/{id}/approve', [MedicalCertificateController::class, 'approve']);
+            Route::post('/{id}/reject', [MedicalCertificateController::class, 'reject']);
+        });
+
+        // Admin routes - statistics
+        Route::middleware('role:admin')->group(function () {
+            Route::get('/stats/overview', [MedicalCertificateController::class, 'statistics']);
+        });
+
+        // Download approved certificate (any authenticated user with access)
+        Route::get('/{id}/download', [MedicalCertificateController::class, 'download']);
+        
+        // View uploaded document
+        Route::get('/{id}/document', [MedicalCertificateController::class, 'viewDocument']);
     });
 });

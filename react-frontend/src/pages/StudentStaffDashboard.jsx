@@ -282,6 +282,11 @@ function StudentStaffDashboard() {
                 <h3>Contact Nurse</h3>
                 <p>Visit Nurse's Office</p>
               </div>
+              <div className="info-card clickable" onClick={() => navigate('/medical-certificate')}>
+                <div className="card-icon">📄</div>
+                <h3>Medical Certificate</h3>
+                <p>Request Medical Certificate</p>
+              </div>
             </div>
 
             {/* Lab Reports Section */}

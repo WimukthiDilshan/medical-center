@@ -4,6 +4,7 @@ import appointmentService from '../../services/appointmentService';
 import prescriptionService from '../../services/prescriptionService';
 import { authService } from '../../services/authService';
 import SignatureManager from '../../components/SignatureManager';
+import { getMedicalCertificates } from '../../services/medicalService';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
@@ -23,6 +24,9 @@ function DoctorDashboard() {
   const [showPrescriptions, setShowPrescriptions] = useState(false);
   const [prescriptions, setPrescriptions] = useState([]);
   const [showReports, setShowReports] = useState(false);
+  
+  // Medical Certificate count
+  const [certificates, setCertificates] = useState([]);
 
   // Fetch today's queue
   const fetchQueue = async () => {
@@ -47,6 +51,16 @@ function DoctorDashboard() {
       setShowPrescriptions(true);
     } catch (err) {
       setError('Failed to fetch prescriptions');
+    }
+  };
+
+  // Fetch medical certificates
+  const fetchCertificates = async () => {
+    try {
+      const data = await getMedicalCertificates();
+      setCertificates(data);
+    } catch (err) {
+      console.error('Error fetching certificates:', err);
     }
   };
 
@@ -123,6 +137,7 @@ function DoctorDashboard() {
       setUser(currentUser);
     }
     fetchQueue();
+    fetchCertificates();
     const interval = setInterval(fetchQueue, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -139,6 +154,8 @@ function DoctorDashboard() {
     checked_in: appointments.filter(a => a.status === 'checked_in').length,
     in_progress: appointments.filter(a => a.status === 'in_progress').length,
   };
+
+  const pendingCertificates = certificates.filter(cert => cert.status === 'pending');
 
   return (
     <div className="doctor-dashboard">
@@ -173,6 +190,15 @@ function DoctorDashboard() {
           <h3>Completed Today</h3>
           <p className="stat-number">{completedCount}</p>
         </div>
+        <div 
+          className="stat-card clickable" 
+          onClick={() => navigate('/dashboard/doctor/medical-certificates')}
+          style={{ cursor: 'pointer', background: 'linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)', borderLeft: '4px solid #14b8a6' }}
+        >
+          <h3>Medical Certificates</h3>
+          <p className="stat-number">{pendingCertificates.length}</p>
+          <p style={{ fontSize: '0.85rem', color: '#0d9488', marginTop: '0.5rem' }}>Click to Review</p>
+        </div>
       </div>
 
       {/* Action Buttons */}
@@ -182,6 +208,9 @@ function DoctorDashboard() {
         </button>
         <button onClick={() => setShowReports(!showReports)} className="btn-action">
           📊 Get Reports
+        </button>
+        <button onClick={() => navigate('/dashboard/doctor/medical-certificates')} className="btn-action" style={{ background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' }}>
+          📄 Medical Certificates ({pendingCertificates.length})
         </button>
       </div>
 
