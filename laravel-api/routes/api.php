@@ -8,6 +8,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MedicalCertificateController;
+use App\Http\Controllers\QRCodeController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -20,12 +21,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/change-password', [AuthController::class, 'changePassword']);
-    
+
     // User signature routes
     Route::post('/signature', [UserController::class, 'uploadSignature']);
     Route::get('/signature', [UserController::class, 'getSignature']);
     Route::delete('/signature', [UserController::class, 'deleteSignature']);
-    
+
+    // QR Code routes
+    Route::prefix('qr-code')->group(function () {
+        // Student/Staff - Generate QR code
+        Route::middleware('role:student,staff')->group(function () {
+            Route::get('/generate', [QRCodeController::class, 'generate']);
+            Route::get('/download', [QRCodeController::class, 'download']);
+        });
+
+        // Nurse - Scan and verify QR code
+        Route::middleware('role:nurse')->group(function () {
+            Route::post('/verify', [QRCodeController::class, 'verify']);
+            Route::post('/create-appointment', [QRCodeController::class, 'createAppointment']);
+        });
+    });
+
     // Admin only routes
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('/pending-users', [AdminController::class, 'getPendingUsers']);
@@ -42,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [AppointmentController::class, 'index']);
         Route::get('/{id}', [AppointmentController::class, 'show']);
         Route::get('/user/{userId}/history', [AppointmentController::class, 'history']);
-        
+
         // Nurse routes
         Route::middleware('role:nurse')->group(function () {
             Route::post('/search-user', [AppointmentController::class, 'searchUser']);
@@ -68,11 +84,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [PrescriptionController::class, 'index']);
         Route::get('/{id}', [PrescriptionController::class, 'show']);
         Route::get('/patient/{patientId}', [PrescriptionController::class, 'patientPrescriptions']);
-        
+
         // Patient routes (student/staff)
         Route::get('/my/list', [PrescriptionController::class, 'myPrescriptions']);
         Route::get('/download/{id}', [PrescriptionController::class, 'download']);
-        
+
         // Doctor routes
         Route::middleware('role:doctor')->group(function () {
             Route::post('/', [PrescriptionController::class, 'store']);
@@ -100,7 +116,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Common routes - get all and get one
         Route::get('/', [MedicalCertificateController::class, 'index']);
         Route::get('/{id}', [MedicalCertificateController::class, 'show']);
-        
+
         // Student/Staff routes - request new certificate
         Route::middleware('role:student,staff')->group(function () {
             Route::post('/', [MedicalCertificateController::class, 'store']);
@@ -119,7 +135,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Download approved certificate (any authenticated user with access)
         Route::get('/{id}/download', [MedicalCertificateController::class, 'download']);
-        
+
         // View uploaded document
         Route::get('/{id}/document', [MedicalCertificateController::class, 'viewDocument']);
     });

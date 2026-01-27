@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import appointmentService from '../services/appointmentService';
 import prescriptionService from '../services/prescriptionService';
+import QRCodeGenerator from '../components/QRCodeGenerator';
 import './StudentStaffDashboard.css';
 
 function StudentStaffDashboard() {
@@ -310,6 +311,9 @@ function StudentStaffDashboard() {
                 <p>Request Medical Certificate</p>
               </div>
             </div>
+
+            {/* QR Code Generator Section */}
+            <QRCodeGenerator />
 
             {/* Lab Reports Section */}
             {labReports.length > 0 && (

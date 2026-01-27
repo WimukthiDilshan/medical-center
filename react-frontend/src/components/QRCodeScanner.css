@@ -1,0 +1,265 @@
+.qr-scanner-container {
+    margin: 20px 0;
+}
+
+.qr-scanner-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.qr-scanner-card h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.qr-scanner-card > p {
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.scan-btn {
+    display: block;
+    width: 100%;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.scan-btn:hover {
+    background: #0056b3;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 20px;
+    color: #007bff;
+    font-size: 1.1em;
+}
+
+/* Scanner Wrapper */
+.scanner-wrapper {
+    margin: 20px 0;
+}
+
+.scanner-info {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.scanner-info p {
+    margin: 5px 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.small-text {
+    font-size: 0.9em;
+    color: #666;
+    font-weight: normal !important;
+}
+
+#qr-reader {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.stop-btn {
+    display: block;
+    width: 100%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.stop-btn:hover {
+    background: #c82333;
+}
+
+/* Patient Identified Section */
+.patient-identified {
+    margin-top: 20px;
+}
+
+.success-banner {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.success-banner h4 {
+    margin: 0;
+    color: #155724;
+    font-size: 1.2em;
+}
+
+.patient-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.info-value {
+    color: #212529;
+}
+
+/* Appointment Form */
+.appointment-form {
+    background: #fff;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.appointment-form h4 {
+    margin: 0 0 20px 0;
+    color: #007bff;
+    font-size: 1.1em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.priority-group .radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.create-btn {
+    flex: 1;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.create-btn:hover {
+    background: #218838;
+}
+
+.create-btn:disabled {
+    background: #94d3a2;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    flex: 1;
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.cancel-btn:hover {
+    background: #5a6268;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .qr-scanner-card {
+        padding: 15px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .priority-group .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

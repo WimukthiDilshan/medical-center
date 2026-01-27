@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appointmentService from '../../services/appointmentService';
 import { authService } from '../../services/authService';
+import QRCodeScanner from '../../components/QRCodeScanner';
 import './NurseDashboard.css';
 
 function NurseDashboard() {
@@ -223,6 +224,12 @@ function NurseDashboard() {
           <p className="stat-number">{stats.urgent}</p>
         </div>
       </div>
+
+      {/* QR Code Scanner Section */}
+      <QRCodeScanner onAppointmentCreated={(appointment) => {
+        setSuccess(`Appointment created successfully for ${appointment.user.name}`);
+        fetchAppointments();
+      }} />
 
       {/* Search Patient Section */}
       <div className="card">
