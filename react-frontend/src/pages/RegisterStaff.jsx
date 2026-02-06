@@ -59,7 +59,7 @@ function RegisterStaff() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <img src="http://localhost:8000/images/logo.jpg" alt="University Logo" className="auth-logo" />
+          <img src="/logo.jpg" alt="University Logo" className="auth-logo" />
           <div className="auth-title">
             <h1>Medical Center</h1>
             <p className="university-name">Faculty of Engineering</p>
